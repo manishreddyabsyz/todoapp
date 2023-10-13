@@ -1,0 +1,90 @@
+.input{
+  padding: 12px;
+  background-color:#0d0d0d;
+  border: 0;
+  width: 300px;
+  font-size: 16px;
+  color: white;
+}
+.date-input{
+  
+  width: 100px;
+  
+  border: 0; 
+  margin-left: 10px;
+}
+.date{
+  color: white;
+}
+::placeholder {
+  color:white;
+}
+header h1{
+  color: white;
+}
+.container{
+ display: flex;
+ flex-direction: column;
+ 
+
+height: 100vh;
+}
+.content-container{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+}
+.add-btn{
+  background-color: aqua;
+  border: 0px;
+  margin-left: 5px;
+  padding-top: 2px;
+  cursor: pointer;
+  border-radius: 5px;
+
+}
+.input-btn{
+  display: flex;
+  justify-content: center;
+}
+.todo{
+  background-color: #0d0d0d;
+  padding: 10px;
+  color: white;
+  width: 350px;
+
+  border-radius: 5px;
+  margin-bottom: 10px;
+  list-style: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  text-align: center;
+  
+}
+
+.delete-btn{
+  margin-left: 5px;
+  cursor: pointer;
+  border: 0px;
+  background-color: transparent;
+  color:red;
+ margin-top: 10px;
+}
+
+
+
+ul{
+  margin-right: 30px;
+}
+.clear-btn-container{
+  display: flex;
+  justify-content: space-between;
+  width: 500px;
+}
+.checkbox{
+  text-decoration: line-through;
+  color: white;
+}
