@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../App.css";
 import AddBoxIcon from "@mui/icons-material/AddBox";
 import ModeEditOutlineOutlinedIcon from "@mui/icons-material/ModeEditOutlineOutlined";
@@ -24,74 +24,78 @@ const style = {
 const Form = () => {
   const [task, setTask] = useState("");
   const [todos, setTodos] = useState([]);
-  const[edtitableText,setEditableText]=useState("")
-  const[itemIndex,setItemIndex]=useState(0)
-  const [date,setDate]=useState("")
+  const [edtitableText, setEditableText] = useState("");
+  const [itemIndex, setItemIndex] = useState(0);
+  const [date, setDate] = useState("");
+
+  useEffect(() => {
+    getAllTodos();
+  }, []);
+
+  const getAllTodos = () => {
+    const savedTodos = JSON.parse(localStorage.getItem("todos"));
+    if (savedTodos) setTodos(savedTodos);
+  };
 
   const [open, setOpen] = React.useState(false);
   const handleOpen = (name) => {
     setOpen(true);
-    setEditableText(name)
-  }
+    setEditableText(name);
+  };
   const handleClose = (id) => {
-   
-
     setOpen(false);
-    todos.map((arr,index)=>index===id?todos[index].name=edtitableText:todos)
-    
-    
-
-  }
+    todos.map((arr, index) =>
+      index === id ? 
+      (todos[index].name = edtitableText) : todos
+    );
+    localStorage.setItem("todos",JSON.stringify(todos))
+  };
 
   const submitHandler = (e) => {
     e.preventDefault();
     const newTask = {
-      
       name: task,
       checked: false,
-      date:date
+      date: date,
     };
-    if(task===""){
-      alert("Input cant be empty")
-    }
-    else if(date===""){
-      alert("select a date")
-    }  
-  
-    else{
-
-    
-    setTodos([...todos, newTask]);
-    setTask("");
-    setDate("")
+    if (task === "") {
+      alert("Input cant be empty");
+    } else if (date === "") {
+      alert("select a date");
+    } else {
+      const todosToLocal = [...todos, newTask];
+      localStorage.setItem("todos", JSON.stringify(todosToLocal));
+      setTodos(todosToLocal);
+      setTask("");
+      setDate("");
     }
   };
- 
 
   //delete
 
-  const deleteHandler=(id)=>{
-    const updatedTodo=todos.filter((item,index)=>index!==id)
-    setTodos(updatedTodo)
+  const deleteHandler = (id) => {
+    const updatedTodo = todos.filter((item, index) => index !== id);
+    localStorage.setItem("todos", JSON.stringify(updatedTodo));
+    setTodos(updatedTodo);
+  };
 
-  }
+  const getIndex = (id) => {
+    console.log(id);
+    setItemIndex(id);
+  };
+  console.log(todos);
 
-  const getIndex=(id)=>{
-    console.log(id)
-      setItemIndex(id)
-  }
-  console.log(todos)
-
-
-  //checkboxhandle 
-  const handleCheckbox=(id)=>{
-    const modifyTodo=todos.map((todo,index)=>index===id?{...todo,checked:!todo.checked}:todo)
-    setTodos(modifyTodo)
-    
-  }
+  //checkboxhandle
+  const handleCheckbox = (id) => {
+    const modifyTodo = todos.map((todo, index) =>
+      index === id ? { ...todo, checked: !todo.checked } : todo
+    );
+    localStorage.setItem("todos",JSON.stringify(modifyTodo))
+    setTodos(modifyTodo);
+  };
   return (
     <>
-      <form onSubmit={submitHandler}>
+      <form onSubmit={submitHandler} autoComplete="off">
         <div className="input-btn">
           <input
             type="text"
@@ -101,7 +105,12 @@ const Form = () => {
             placeholder="Enter Task"
             onChange={(e) => setTask(e.target.value)}
           />
-          <input type="date" className="date-input" onChange={(e)=>setDate(e.target.value)}/>
+          <input
+            type="date"
+            className="date-input"
+            onChange={(e) => setDate(e.target.value)}
+            value={date}
+          />
           <button className="add-btn" type="submit">
             <AddBoxIcon />
           </button>
@@ -109,15 +118,27 @@ const Form = () => {
       </form>
       <ul>
         {todos.length !== 0 &&
-          todos.map((todo,index) => {
+          todos.map((todo, index) => {
             return (
               <li key={index} className="todo">
-                <input type="checkbox" checked={todo.checked} onChange={()=>handleCheckbox(index)}/>
-                <span  className={todo.checked ? "checkbox":""}>{todo.name}</span>
+                <input
+                  type="checkbox"
+                  checked={todo.checked}
+                  onChange={() => handleCheckbox(index)}
+                />
+                <span className={todo.checked ? "checkbox" : ""}>
+                  {todo.name}
+                </span>
                 <span className="date">{todo.date}</span>
                 <div>
-                  <Button onClick={()=>handleOpen(todo.name)} style={{ marginBottom: "18px" }}>
-                    <ModeEditOutlineOutlinedIcon style={{ color: "aqua" }} onClick={()=>getIndex(index)} />
+                  <Button
+                    onClick={() => handleOpen(todo.name)}
+                    style={{ marginBottom: "18px" }}
+                  >
+                    <ModeEditOutlineOutlinedIcon
+                      style={{ color: "aqua" }}
+                      onClick={() => getIndex(index)}
+                    />
                   </Button>
                   <Modal
                     open={open}
@@ -136,15 +157,27 @@ const Form = () => {
                           id="outlined-required"
                           label="Required"
                           defaultValue={edtitableText}
-                          onChange={(e)=>setEditableText(e.target.value)}
+                          onChange={(e) => setEditableText(e.target.value)}
                         />
-                       
                       </Typography>
-                      <Button style={{backgroundColor:"blue",padding:"5px",color:"white",marginTop:"10px"}} onClick={()=>handleClose(itemIndex)}>Save</Button>
+                      <Button
+                        style={{
+                          backgroundColor: "blue",
+                          padding: "5px",
+                          color: "white",
+                          marginTop: "10px",
+                        }}
+                        onClick={() => handleClose(itemIndex)}
+                      >
+                        Save
+                      </Button>
                     </Box>
                   </Modal>
 
-                  <button className="delete-btn" onClick={()=>deleteHandler(index)}>
+                  <button
+                    className="delete-btn"
+                    onClick={() => deleteHandler(index)}
+                  >
                     <DeleteForeverOutlinedIcon style={{ fontSize: "30px" }} />
                   </button>
                 </div>
